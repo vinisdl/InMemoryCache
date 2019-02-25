@@ -122,6 +122,14 @@ namespace InMemoryCache.Caching
             return score;
         }
 
+        public long ZCard(string key)
+        {
+            var collection = Get(key);
+            if (collection == null) return 0;
+            var entry = collection as List<CacheItem>;
+            return entry?.Count ?? 0;
+        }
+
         #endregion
 
     }

@@ -13,5 +13,6 @@ namespace InMemoryCache.Interfaces
         int DbSize();
         long Incr(string key);
         long ZAdd(string key, object value, long score);
+        long ZCard(string key);
     }
 }

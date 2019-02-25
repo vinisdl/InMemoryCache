@@ -80,35 +80,46 @@ namespace InMemoryCacheTest.CachingTest
             Assert.AreEqual(1, _memory.Incr("myIncrementNotExistTest"));
         }
 
+
+
         [Test]
         public void Zadd_Entry()
-        {
-            var topGames = new[]
-            {
-                "Apex Legends",
-                "Slay the Spire",
-                "Resident Evil 2",
-                "Rainbow Six Siege",
-                "Wargroove",
-                "Fortnite Battle Royale",
-                "Into the Breach",
-                "CS:GO",
-                "Warframe",
-                "Dusk",
-                "Battlefield 5",
-                "Hitman 2",
-                "PUBG",
-                "Return of the Obra Dinn"
-
-            };
-            for (int i = 0, j = 1; i < topGames.Length; i++, j++)
-                _memory.ZAdd("topGames", topGames[i], j);
+        {                      
+            for (int i = 0, j = 1; i < _topGames.Length; i++, j++)
+                _memory.ZAdd("topGames", _topGames[i], j);
 
             var list = _memory.Get("topGames") as List<CacheItem>;
 
             Assert.AreEqual(14, list.Count);
-
         }
+
+        [Test]
+        public void ZCard()
+        {
+            for (int i = 0, j = 1; i < _topGames.Length; i++, j++)
+                _memory.ZAdd("topGamesZcard", _topGames[i], j);
+
+            Assert.AreEqual(14, _memory.ZCard("topGamesZcard"));
+        }
+
+        private readonly string[] _topGames = new[]
+        {
+            "Apex Legends",
+            "Slay the Spire",
+            "Resident Evil 2",
+            "Rainbow Six Siege",
+            "Wargroove",
+            "Fortnite Battle Royale",
+            "Into the Breach",
+            "CS:GO",
+            "Warframe",
+            "Dusk",
+            "Battlefield 5",
+            "Hitman 2",
+            "PUBG",
+            "Return of the Obra Dinn"
+
+        };
 
     }
 }
