@@ -124,15 +124,14 @@ namespace InMemoryCache.Caching
 
         public long ZCard(string key)
         {
-            if (TryGetSortedItens(key, out var collection))
+            if (!TryGetSortedItens(key, out var collection))
                 return 0;
-            var entry = collection as List<SortedCacheItem>;
-            return entry?.Count ?? 0;
+            return collection?.Count ?? 0;
         }
 
         public long? ZRank(string key, object value)
         {
-            if (TryGetSortedItens(key, out var collection))
+            if (!TryGetSortedItens(key, out var collection))
                 return null;
 
             return collection.FindIndex(sorted => sorted.Value.Equals(value));
@@ -143,15 +142,31 @@ namespace InMemoryCache.Caching
             entry = null;
             var collection = Get(key);
             if (collection == null)
-                return true;
+                return false;
 
             entry = collection as List<SortedCacheItem>;
-            return false;
+            return true;
         }
 
         public IList<T> ZRange<T>(string key, int start, int stop)
         {
-            throw new NotImplementedException();
+            if (TryGetSortedItens(key, out var collection))
+            {
+                IEnumerable<SortedCacheItem> result = collection;
+                if (start >= 0)
+                    result = result.Skip(start);
+                else
+                    result = result.Skip(collection.Count + start);
+                if (stop != -1)
+                    result = stop > 0 ?
+                        result.Take(stop) :
+                        result.SkipLast(stop * -1);
+                return result
+                    .OrderBy(a => a.Score)
+                    .Select(a => (T)a.Value)
+                    .ToList();
+            }
+            return new List<T>();
         }
 
         #endregion

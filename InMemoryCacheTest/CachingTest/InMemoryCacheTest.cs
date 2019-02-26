@@ -110,6 +110,44 @@ namespace InMemoryCacheTest.CachingTest
             Assert.AreEqual(2, _memory.ZRank("myzset", "three"));
         }
 
+        [Test]
+        public void ZRange_All_Elements()
+        {
+            _memory.ZAdd("myzRange", "one", 1);
+            _memory.ZAdd("myzRange", "two", 1);
+            _memory.ZAdd("myzRange", "three", 1);
+
+            var ranked = _memory.ZRange<string>("myzRange", 0, -1);
+            Assert.AreEqual(3,ranked.Count);
+            Assert.AreEqual("one",ranked.First());
+            Assert.AreEqual("three", ranked.Last());
+        }
+
+        [Test]
+        public void ZRange_Get_One_Range_Element()
+        {
+            _memory.ZAdd("myzRange2", "one", 1);
+            _memory.ZAdd("myzRange2", "two", 1);
+            _memory.ZAdd("myzRange2", "three", 1);
+
+            var ranked = _memory.ZRange<string>("myzRange2", 2, 3);
+            Assert.AreEqual(1, ranked.Count);
+            Assert.AreEqual("three", ranked.First());            
+        }
+
+        [Test]
+        public void ZRange_Get_Elements_With_Last_Elements()
+        {
+            _memory.ZAdd("myzRange3", "one", 1);
+            _memory.ZAdd("myzRange3", "two", 1);
+            _memory.ZAdd("myzRange3", "three", 1);
+
+            var ranked = _memory.ZRange<string>("myzRange3", -2, -1);
+            Assert.AreEqual(2, ranked.Count);
+            Assert.AreEqual("two", ranked.First());
+            Assert.AreEqual("three", ranked.Last());
+        }
+
         private readonly string[] _topGames = new[]
         {
             "Apex Legends",
