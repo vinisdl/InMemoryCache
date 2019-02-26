@@ -48,18 +48,18 @@ namespace InMemoryCache.Caching
         {
             if (!TryGetValue(key, out var entry))
             {
-                var itensOfScoreSet = new List<CacheItem>();
-                itensOfScoreSet.Add(new CacheItem(value, score));
+                var itensOfScoreSet = new List<SortedCacheItem>();
+                itensOfScoreSet.Add(new SortedCacheItem(value, score));
                 CacheSet(key, itensOfScoreSet);
                 return true;
             }
 
             lock (entry)
             {
-                var sortedItens = entry.Value as List<CacheItem>;
+                var sortedItens = entry.Value as List<SortedCacheItem>;
                 var sortedItem = sortedItens.FirstOrDefault(item => item.Value.Equals(value));
                 if (sortedItem == null)
-                    sortedItens.Add(new CacheItem(value, score));
+                    sortedItens.Add(new SortedCacheItem(value, score));
                 else
                     sortedItem.Score = score;
 
@@ -124,10 +124,34 @@ namespace InMemoryCache.Caching
 
         public long ZCard(string key)
         {
-            var collection = Get(key);
-            if (collection == null) return 0;
-            var entry = collection as List<CacheItem>;
+            if (TryGetSortedItens(key, out var collection))
+                return 0;
+            var entry = collection as List<SortedCacheItem>;
             return entry?.Count ?? 0;
+        }
+
+        public long? ZRank(string key, object value)
+        {
+            if (TryGetSortedItens(key, out var collection))
+                return null;
+
+            return collection.FindIndex(sorted => sorted.Value.Equals(value));
+        }
+
+        private bool TryGetSortedItens(string key, out List<SortedCacheItem> entry)
+        {
+            entry = null;
+            var collection = Get(key);
+            if (collection == null)
+                return true;
+
+            entry = collection as List<SortedCacheItem>;
+            return false;
+        }
+
+        public IList<T> ZRange<T>(string key, int start, int stop)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

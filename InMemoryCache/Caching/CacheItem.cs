@@ -11,20 +11,11 @@ namespace InMemoryCache.Caching
             Value = value;
             ExpiresAt = expiresAt;
             LastModifiedTicks = DateTime.UtcNow.Ticks;
-        }
-
-        public CacheItem(object value, long? score)
-        {
-            LastModifiedTicks = DateTime.UtcNow.Ticks;
-            Value = value;
-            Score = score;
-        }
+        }   
 
         internal DateTime? ExpiresAt { get; set; }
 
         internal bool HasExpired => ExpiresAt != null && ExpiresAt < DateTime.UtcNow;
-
-        internal long? Score { get; set; }
 
         internal object Value
         {

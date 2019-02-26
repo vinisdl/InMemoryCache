@@ -80,15 +80,13 @@ namespace InMemoryCacheTest.CachingTest
             Assert.AreEqual(1, _memory.Incr("myIncrementNotExistTest"));
         }
 
-
-
         [Test]
         public void Zadd_Entry()
-        {                      
+        {
             for (int i = 0, j = 1; i < _topGames.Length; i++, j++)
                 _memory.ZAdd("topGames", _topGames[i], j);
 
-            var list = _memory.Get("topGames") as List<CacheItem>;
+            var list = _memory.Get("topGames") as List<SortedCacheItem>;
 
             Assert.AreEqual(14, list.Count);
         }
@@ -100,6 +98,16 @@ namespace InMemoryCacheTest.CachingTest
                 _memory.ZAdd("topGamesZcard", _topGames[i], j);
 
             Assert.AreEqual(14, _memory.ZCard("topGamesZcard"));
+        }
+
+        [Test]
+        public void ZRank()
+        {
+            _memory.ZAdd("myzset", "one", 1);
+            _memory.ZAdd("myzset", "two", 1);
+            _memory.ZAdd("myzset", "three", 1);
+            
+            Assert.AreEqual(2, _memory.ZRank("myzset", "three"));
         }
 
         private readonly string[] _topGames = new[]

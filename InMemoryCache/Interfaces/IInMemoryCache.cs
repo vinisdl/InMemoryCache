@@ -14,5 +14,7 @@ namespace InMemoryCache.Interfaces
         long Incr(string key);
         long ZAdd(string key, object value, long score);
         long ZCard(string key);
+        long? ZRank(string key, object value);
+        IList<T> ZRange<T>(string key, int start, int stop);
     }
 }
