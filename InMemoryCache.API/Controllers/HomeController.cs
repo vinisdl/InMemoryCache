@@ -17,11 +17,6 @@ namespace InMemoryCache.API.Controllers
             _memory = memory;
         }
 
-        [HttpGet]
-        public void Get()
-        {
-        }
-
         [HttpGet("{mykey}")]
         public ActionResult<string> Get([FromRoute] string mykey)
         {
