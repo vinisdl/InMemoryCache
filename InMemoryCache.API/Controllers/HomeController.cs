@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using InMemoryCache.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Newtonsoft.Json;
 
 namespace InMemoryCache.API.Controllers
 {
@@ -16,6 +11,7 @@ namespace InMemoryCache.API.Controllers
     public class HomeController : ControllerBase
     {
         private readonly IInMemoryCache _memory;
+
         public HomeController(IInMemoryCache memory)
         {
             _memory = memory;
@@ -44,7 +40,7 @@ namespace InMemoryCache.API.Controllers
             using (var reader = new StreamReader(Request.Body, Encoding.ASCII))
             {
                 return await reader.ReadToEndAsync();
-            }            
+            }
         }
 
         [HttpPut("{mykey}")]
