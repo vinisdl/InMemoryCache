@@ -8,11 +8,11 @@ namespace InMemoryCache.API.Controllers
 {
     [Route("/")]
     [ApiController]
-    public class HomeController : ControllerBase
+    public class InMemoryController : ControllerBase
     {
         private readonly IInMemoryCache _memory;
 
-        public HomeController(IInMemoryCache memory)
+        public InMemoryController(IInMemoryCache memory)
         {
             _memory = memory;
         }
