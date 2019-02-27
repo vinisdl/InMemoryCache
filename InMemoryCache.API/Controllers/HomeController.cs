@@ -67,5 +67,12 @@ namespace InMemoryCache.API.Controllers
         {
             return _memory.DbSize();
         }
+
+        [HttpPost]
+        [Route("{mykey}/Incr")]
+        public long Incr([FromRoute] string mykey)
+        {
+            return _memory.Incr(mykey);
+        }
     }
 }
